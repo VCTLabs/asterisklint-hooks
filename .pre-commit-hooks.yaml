@@ -5,4 +5,3 @@
     language: python
     files: extensions\.conf$
     minimum_pre_commit_version: '2.9.2'
-    types: [text]

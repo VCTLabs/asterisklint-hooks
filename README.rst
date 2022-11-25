@@ -23,7 +23,7 @@ following contents:
 .. code-block:: yaml
 
     repos:
-      - repo: https://github.com/VCTLabs/pre-commit
+      - repo: https://github.com/VCTLabs/mirrors-asterisklint
         rev: <VERSION>  # Get the latest from: https://github.com/VCTLabs/pre-commit/releases
         hooks:
           - id: dialplan-check

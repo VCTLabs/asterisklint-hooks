@@ -3,5 +3,20 @@
     description: 'Run asterisklint dialplan-check on extensions.conf files'
     entry: asterisklint dialplan-check
     language: python
-    files: extensions\.conf$
+    types: [text]
+    'files': extensions\.conf$
+    args: []
+    require_serial: false
+    additional_dependencies: []
+    minimum_pre_commit_version: '2.9.2'
+
+-   id: func-odbc-check
+    name: func-odbc-check
+    description: 'Run asterisklint func_odbc-check on func_odbc.conf files'
+    entry: asterisklint func_odbc-check
+    language: python
+    'files': func_odbc\.conf$
+    args: []
+    require_serial: false
+    additional_dependencies: []
     minimum_pre_commit_version: '2.9.2'

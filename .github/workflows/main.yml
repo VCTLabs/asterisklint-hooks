@@ -17,10 +17,9 @@ jobs:
         python-version: '3.10'
 
     - run: pip install pre-commit-mirror-maker
-    - run: git config --global user.name 'Github Actions'
+    - run: git config --global user.name 'github-actions[bot]'
     - run: git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
     - run: pre-commit-mirror . --language python --package-name asterisklint --files-regex extensions\.conf$ --id dialplan-check --entry 'asterisklint dialplan-check'
-    # workaround hook creation
     - run: |
         NEW_VER=$(cat .version)
         NEW_TAG=$(git describe --tags)

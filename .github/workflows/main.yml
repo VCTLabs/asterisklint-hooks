@@ -1,0 +1,24 @@
+name: main
+on:
+  push:
+    branches:
+    - master
+  schedule:
+  - cron: '40 8 * * *'
+
+jobs:
+  build:
+    name: main
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+    - run: pip install pre-commit-mirror-maker
+    - run: git config --global user.name 'Github Action'
+    - run: git config --global user.email 'action@github.com'
+    - run: pre-commit-mirror . --language python --package-name asterisklint --files-regex extensions\.conf$ --id dialplan-check --entry 'asterisklint dialplan-check'
+    - run: |
+        git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
+        git push origin HEAD:refs/heads/master --tags
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,7 +2,7 @@ name: main
 on:
   push:
     branches:
-    - master
+    - develop
   schedule:
   - cron: '40 8 * * *'
 
@@ -22,7 +22,7 @@ jobs:
     - run: pre-commit-mirror . --language python --package-name asterisklint --files-regex extensions\.conf$ --id dialplan-check --entry 'asterisklint dialplan-check'
     - run: |
         NEW_VER=$(cat .version)
-        NEW_TAG=$(git describe --tags)
+        NEW_TAG=$(git describe --tags --always)
         echo "NEW_VER=$NEW_VER" >> $GITHUB_ENV
         echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
         echo ${{ env.NEW_VER }}
@@ -34,6 +34,7 @@ jobs:
         git commit -m 'Mirror: ${{ env.NEW_VER }}'
         git tag ${{ env.NEW_TAG }}
         git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
-        git push origin HEAD:refs/heads/master --tags
+        git push origin HEAD:refs/heads/develop --tags
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: v${{ env.NEW_VER }} == ${{ env.NEW_TAG }}

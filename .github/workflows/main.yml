@@ -16,29 +16,33 @@ jobs:
       with:
         python-version: '3.10'
 
-    - run: pip install pre-commit-mirror-maker
+      - name: Get latest version
+        uses: Bruce17/ghaction-package-latest-version@v1.1.2
+        id: get_version
+        with:
+          package: asterisklint
+          language: python
+
     - run: git config --global user.name 'github-actions[bot]'
     - run: git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-    - run: pre-commit-mirror . --language python --package-name asterisklint --files-regex extensions\.conf$ --id dialplan-check --entry 'asterisklint dialplan-check'
+    - name: Set current version
+      run: |
+        CUR_VER=$(cat .version)
+        echo "CUR_VER=$CUR_VER" >> $GITHUB_ENV
+        echo "$CUR_VER"
+        echo ${{ steps.get_version.outputs.latestVersion }}
+
     - run: |
-        NEW_VER=$(cat .version)
-        NEW_TAG=$(git describe --tags --always)
-        echo "NEW_VER=$NEW_VER" >> $GITHUB_ENV
-        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-        echo ${{ env.NEW_VER }}
-        echo ${{ env.NEW_TAG }}
-    - run: |
-        if [ "$TAG" = "$VER" ]
+        if [ "$NEW" != "$OLD" ]
         then
-            git tag --delete ${{ env.NEW_TAG }}
-            git reset --soft  HEAD~1
-            git restore --staged .pre-commit-hooks.yaml
-            git commit -m 'Mirror: ${{ env.NEW_VER }}'
-            git tag ${{ env.NEW_TAG }}
+            echo "$NEW" > .version
+            git add .
+            git commit -m 'Mirror: $NEW'
+            git tag v$NEW
             git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
             git push origin HEAD:refs/heads/develop --tags
         fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TAG: ${{ env.NEW_TAG }}
-        VER: v${{ env.NEW_VER }}
+        NEW: ${{ steps.get_version.outputs.latestVersion }}
+        OLD: ${{ env.CUR_VER }}

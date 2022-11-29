@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import argparse
-import subprocess as sp
-
+import logging
+import subprocess as sp  # nosec (yes we need this)
 from os import environ
 from shlex import split
 from typing import Sequence
@@ -10,8 +10,12 @@ from typing import Sequence
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--alint-ignore', help='alint ignore list - comma-separated str')
-    parser.add_argument('-n', '--no-odbc', action='store_true', help='do not process func_odbc.conf file')
+    parser.add_argument(
+        '-a', '--alint-ignore', help='alint ignore list - comma-separated str'
+    )
+    parser.add_argument(
+        '-n', '--no-odbc', action='store_true', help='do not process func_odbc.conf file'
+    )
     parser.add_argument('files', nargs='*', help='file list - one or more files')
 
     args = parser.parse_args(argv)
@@ -25,12 +29,13 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     retval = 0
     for filename in args.files:
-        cmd_args = cmd_args  + filename
+        cmd_args = cmd_args + filename
         cmd = split(cmd_args)
         try:
-            sp.run(cmd, env=environ)
-        except Exception as exc:
-            print(f'{exc}')
+            # rus in pre-commit env, otherwise sanitized
+            sp.run(cmd, shell=False, check=True, env=environ, timeout=5)  # nosec
+        except (sp.CalledProcessError, sp.TimeoutExpired) as exc:
+            logging.debug('%s', exc)
             retval = 1
     return retval
 

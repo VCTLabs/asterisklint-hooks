@@ -63,5 +63,6 @@ distance = "{next_version}.dev{distance}"
 dirty = "{version}+d{build_date:%Y%m%d}"
 distance-dirty = "{next_version}.dev{distance}"
 
-[tool.versioningit.write]
-file = "asterisklint_hooks/_version.py"
+[tool.versioningit.onbuild]
+source-file = ".version"
+build-file = ".version"

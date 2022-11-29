@@ -3,8 +3,10 @@ from __future__ import annotations
 from setuptools import setup
 
 
+with open(".version", 'r') as f:
+    AL_VERSION = f.read().strip()
+
+
 setup(
-    name='pre_commit_placeholder_package',
-    version='0.0.0',
-    install_requires=['asterisklint==0.4.3'],
+    install_requires=[f'asterisklint=={AL_VERSION}'],
 )

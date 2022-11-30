@@ -9,9 +9,11 @@ from typing import Sequence
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description='Run asterisklint on configuration files'
+    )
     parser.add_argument(
-        '-a', '--alint-ignore', help='alint ignore list - comma-separated str'
+        '-a', '--alint-ignore', nargs=1, help='alint ignore list - comma-separated str'
     )
     parser.add_argument(
         '-n', '--no-odbc', action='store_true', help='do not process func_odbc.conf file'

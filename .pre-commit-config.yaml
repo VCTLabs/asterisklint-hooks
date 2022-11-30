@@ -48,6 +48,7 @@ repos:
           - "asterisklint"
           - "setuptools"
           - "versioningit"
+        exclude: ^(tests/.*\.py$)
 
   - repo: https://github.com/myint/autoflake
     rev: v2.0.0

@@ -2,7 +2,7 @@ name: main
 on:
   push:
     branches:
-    - develop
+    - master
   schedule:
   - cron: '40 8 * * *'
 
@@ -36,10 +36,10 @@ jobs:
         then
             echo "$NEW" > version.txt
             git add version.txt
-            git commit -m 'Mirror: $NEW'
+            git commit -m "Mirror: ${{ steps.get_version.outputs.latestVersion }}"
             git tag v$NEW
             git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
-            git push origin HEAD:refs/heads/develop --tags
+            git push origin HEAD:refs/heads/master --tags
         fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

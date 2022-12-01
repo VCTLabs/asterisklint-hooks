@@ -7,7 +7,7 @@ on:
   - cron: '40 8 * * *'
 
 jobs:
-  build:
+  mirror:
     name: main
     runs-on: ubuntu-20.04
     steps:
@@ -16,24 +16,32 @@ jobs:
       with:
         python-version: '3.10'
 
-    - run: pip install pre-commit-mirror-maker
+    - uses: Bruce17/ghaction-package-latest-version@v1.1.2
+      id: get_version
+      with:
+        package: asterisklint
+        language: python
+
     - run: git config --global user.name 'github-actions[bot]'
     - run: git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-    - run: pre-commit-mirror . --language python --package-name asterisklint --files-regex extensions\.conf$ --id dialplan-check --entry 'asterisklint dialplan-check'
+    - name: Set current version
+      run: |
+        CUR_VER=$(cat version.txt)
+        echo "CUR_VER=$CUR_VER" >> $GITHUB_ENV
+        echo "$CUR_VER"
+        echo ${{ steps.get_version.outputs.latestVersion }}
+
     - run: |
-        NEW_VER=$(cat .version)
-        NEW_TAG=$(git describe --tags)
-        echo "NEW_VER=$NEW_VER" >> $GITHUB_ENV
-        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-        echo ${{ env.NEW_VER }}
-        echo ${{ env.NEW_TAG }}
-    - run: |
-        git tag --delete ${{ env.NEW_TAG }}
-        git reset --soft  HEAD~1
-        git restore --staged .pre-commit-hooks.yaml
-        git commit -m 'Mirror: ${{ env.NEW_VER }}'
-        git tag ${{ env.NEW_TAG }}
-        git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
-        git push origin HEAD:refs/heads/master --tags
+        if [ "$NEW" != "$OLD" ]
+        then
+            echo "$NEW" > version.txt
+            git add version.txt
+            git commit -m "Mirror: ${{ steps.get_version.outputs.latestVersion }}"
+            git tag v$NEW
+            git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
+            git push origin HEAD:refs/heads/master --tags
+        fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NEW: ${{ steps.get_version.outputs.latestVersion }}
+        OLD: ${{ env.CUR_VER }}

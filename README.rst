@@ -1,7 +1,9 @@
-|maint|
-
 Pre-commit hooks
 ================
+
+|ci|
+
+|maint|
 
 This repo defines Git pre-commit hooks intended for use with pre-commit_.  The
 currently supported hooks are:
@@ -23,8 +25,8 @@ following contents:
 .. code-block:: yaml
 
     repos:
-      - repo: https://github.com/VCTLabs/mirrors-asterisklint
-        rev: <VERSION>  # Get the latest from: https://github.com/VCTLabs/pre-commit/releases
+      - repo: https://github.com/VCTLabs/asterisklint-hooks
+        rev: v0.4.3  # Get the latest from: https://github.com/VCTLabs/asterisklint-hooks/tags
         hooks:
           - id: dialplan-check
 
@@ -56,6 +58,10 @@ License
 This code is released under the MIT License. Please see the LICENSE file
 for more details.
 
+
+.. |ci| image:: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/ci.yml
+    :alt: CI Status
 
 .. |maint| image:: https://img.shields.io/badge/maintained%20by-VCTLabs.com-blueviolet.svg
     :target: https://www.vctlabs.com/

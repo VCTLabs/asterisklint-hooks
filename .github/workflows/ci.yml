@@ -1,0 +1,68 @@
+# still having msys git character encoding failure on test_get_commit
+# this rev is *almost* correct on windows-latest, but not quite...
+
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python-version }}
+      PYTHONIOENCODING: utf-8
+      PIP_DOWNLOAD_CACHE: ${{ github.workspace }}/../.pip_download_cache
+    strategy:
+      fail-fast: false
+      matrix:
+        # windows fails to install asterisklint dir-full-of-symlinks
+        os: [ubuntu-20.04, macos-11]
+        python-version: [3.7, 3.8, 3.9, '3.10']
+
+    steps:
+    - name: Set git crlf/eol
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install tox tox-gh-actions
+
+    - name: Test with tox
+      run: |
+        tox
+      env:
+        PLATFORM: ${{ matrix.os }}
+
+    - name: Installable
+      run: |
+        tox -e install
+
+    - name: Build dist pkgs
+      run: |
+        tox -e build,check
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: sdist
+        path: ./dist/*gz

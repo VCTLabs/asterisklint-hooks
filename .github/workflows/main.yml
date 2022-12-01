@@ -7,7 +7,7 @@ on:
   - cron: '40 8 * * *'
 
 jobs:
-  build:
+  mirror:
     name: main
     runs-on: ubuntu-20.04
     steps:
@@ -26,7 +26,7 @@ jobs:
     - run: git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
     - name: Set current version
       run: |
-        CUR_VER=$(cat .version)
+        CUR_VER=$(cat version.txt)
         echo "CUR_VER=$CUR_VER" >> $GITHUB_ENV
         echo "$CUR_VER"
         echo ${{ steps.get_version.outputs.latestVersion }}
@@ -34,8 +34,8 @@ jobs:
     - run: |
         if [ "$NEW" != "$OLD" ]
         then
-            echo "$NEW" > .version
-            git add .
+            echo "$NEW" > version.txt
+            git add version.txt
             git commit -m 'Mirror: $NEW'
             git tag v$NEW
             git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY

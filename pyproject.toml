@@ -1,7 +1,6 @@
 [build-system]
 requires = [
     "setuptools>=42",
-    "versioningit >= 1.1.1",
 ]
 
 build-backend = "setuptools.build_meta"
@@ -64,5 +63,5 @@ dirty = "{version}+d{build_date:%Y%m%d}"
 distance-dirty = "{next_version}.dev{distance}"
 
 [tool.versioningit.onbuild]
-source-file = ".version"
-build-file = ".version"
+source-file = "version.txt"
+build-file = "version.txt"

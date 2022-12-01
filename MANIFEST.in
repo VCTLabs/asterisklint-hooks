@@ -1,2 +1,1 @@
-include README.rst LICENSE
-include .version
+include README.rst LICENSE version.txt

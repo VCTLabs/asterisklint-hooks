@@ -1,4 +1,4 @@
-name: main
+name: Mirror
 on:
   push:
     branches:
@@ -37,7 +37,7 @@ jobs:
             echo "$NEW" > version.txt
             git add version.txt
             git commit -m "Mirror: ${{ steps.get_version.outputs.latestVersion }}"
-            git tag v$NEW
+            git tag v${{ steps.get_version.outputs.latestVersion }}
             git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
             git push origin HEAD:refs/heads/master --tags
         fi

@@ -1,9 +1,12 @@
 Pre-commit hooks
 ================
 
-|ci|
+|main| |ci| |coverage| |badge|
 
-|maint|
+|maint| |cov| |pylint|
+
+|tag| |license| |python|
+
 
 This repo defines Git pre-commit hooks intended for use with pre-commit_.  The
 currently supported hooks are:
@@ -59,10 +62,42 @@ This code is released under the MIT License. Please see the LICENSE file
 for more details.
 
 
+.. |main| image:: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/main.yml/badge.svg
+    :target: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/main.yml
+    :alt: Mirror Status
+
 .. |ci| image:: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/ci.yml
     :alt: CI Status
 
+.. |coverage| image:: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/coverage.yml/badge.svg
+    :target: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/coverage.yml
+    :alt: Coverage Status
+
+.. |badge| image:: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/pylint.yml/badge.svg
+    :target: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/pylint.yml
+    :alt: Pylint Status
+
 .. |maint| image:: https://img.shields.io/badge/maintained%20by-VCTLabs.com-blueviolet.svg
     :target: https://www.vctlabs.com/
     :alt: Maintained by VCTLabs
+
+.. |cov| image:: https://raw.githubusercontent.com/VCTLabs/asterisklint-hooks/badges/master/test-coverage.svg
+    :target: https://github.com/VCTLabs/asterisklint-hooks/
+    :alt: Test coverage
+
+.. |pylint| image:: https://raw.githubusercontent.com/VCTLabs/asterisklint-hooks/badges/master/pylint-score.svg
+    :target: https://github.com/VCTLabs/asterisklint-hooks/actions/workflows/pylint.yml
+    :alt: Pylint score
+
+.. |license| image:: https://img.shields.io/badge/license-MIT-blue
+    :target: https://github.com/VCTLabs/asterisklint-hooks/blob/master/LICENSE
+    :alt: License
+
+.. |tag| image:: https://img.shields.io/github/v/tag/VCTLabs/asterisklint-hooks?color=blue&include_prereleases&label=latest%20release
+    :target: https://github.com/ossobv/asterisklint/tags
+    :alt: GitHub tag
+
+.. |python| image:: https://img.shields.io/badge/python-3.7+-blue.svg
+    :target: https://www.python.org/downloads/
+    :alt: Python

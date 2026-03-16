@@ -4,12 +4,14 @@ on:
   workflow_dispatch:
   pull_request:
   push:
-    branches: [ master, develop ]
+    branches:
+      - master
+      - develop
 
 jobs:
   pylint:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         shell: bash
@@ -17,9 +19,14 @@ jobs:
       branch: ${{ steps.extract_branch.outputs.branch }}
       rating: ${{ steps.analyze.outputs.rating }}
       path: ${{ steps.analyze.outputs.path }}
+    permissions:
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
+      pull-requests: write
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -38,10 +45,10 @@ jobs:
         fi
         echo "branch=${EXPORT_VALUE}" >> $GITHUB_OUTPUT
 
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v4
+    - name: Set up Python
+      uses: actions/setup-python@v6
       with:
-        python-version: 3.8
+        python-version: "3.11"
 
     - name: Install tox
       run: |
@@ -62,26 +69,31 @@ jobs:
     # Only generate and publish if these conditions are met:
     # - The previous job/analyze step ended successfully
     # - At least one of these is true:
-    #   - This is a push event and the push event is on branch 'main' or 'develop'
+    #   - This is a push event and the push event is on branch 'master' or 'develop'
     # Note: if this repo is personal (ie, not an org repo) then you can
     #       use the following to change the scope of the next 2 jobs
     #       instead of running on branch push as shown below:
     #   - This is a pull request event and the pull actor is the same as the repo owner
-    #     if: ${{ ( github.event_name == 'pull_request' && github.actor == github.repository_owner ) || github.ref == 'refs/heads/main' }}
+    #     if: ${{ ( github.event_name == 'pull_request' && github.actor == github.repository_owner ) || github.ref == 'refs/heads/master' }}
     name: Generate badge image with pylint score
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+      # required for workflows in private repositories
+      actions: read
+      contents: write
     needs: [pylint]
     if: ${{ github.event_name == 'push' }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         ref: badges
         path: badges
 
     # Use the output from the `analyze` step
     - name: Create pylint badge
-      uses: emibcn/badge-action@v2.0.3
+      uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8  # v2.0.3
       id: badge
       with:
         label: 'Pylint score'
@@ -104,7 +116,7 @@ jobs:
         git commit -m "Add/Update badge" || true
 
     - name: Push badge commit
-      uses: ad-m/github-push-action@master
+      uses: ad-m/github-push-action@77c5b412c50b723d2a4fbc6d71fb5723bcd439aa  # v1.0.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: badges

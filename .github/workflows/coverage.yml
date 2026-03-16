@@ -188,7 +188,7 @@ jobs:
         output: 'both'
 
     - name: Add Coverage PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
+      uses: marocchino/sticky-pull-request-comment@v3
       if: github.event_name == 'pull_request' && (github.event.pull_request.author_association == 'MEMBER' || github.actor == github.repository_owner)
       with:
         header: coverage
@@ -279,7 +279,7 @@ jobs:
         fi
 
     - name: Comment PR with test coverage delta
-      uses: marocchino/sticky-pull-request-comment@v2
+      uses: marocchino/sticky-pull-request-comment@v3
       if: env.HAVE_BASE_COVERAGE == 'true' && (github.event.pull_request.author_association == 'MEMBER' || github.actor == github.repository_owner)
       with:
         header: delta

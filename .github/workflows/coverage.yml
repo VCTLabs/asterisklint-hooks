@@ -216,8 +216,6 @@ jobs:
     runs-on: ubuntu-24.04
     needs: [cov_data, base]
     permissions:
-      # required for workflows in private repositories
-      actions: read
       contents: read
     outputs:
       coverage: ${{ needs.cov_data.outputs.coverage }}
@@ -243,8 +241,6 @@ jobs:
     needs: [test, base]
     permissions:
       pull-requests: write
-      # required for workflows in private repositories
-      actions: read
       contents: read
 
     steps:

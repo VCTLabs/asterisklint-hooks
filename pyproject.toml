@@ -1,8 +1,7 @@
 [build-system]
 requires = [
-    "setuptools>=82.0.1",
+    "setuptools >=42, <83.0.0",
 ]
-
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]

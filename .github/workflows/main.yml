@@ -14,18 +14,19 @@ permissions:
 jobs:
   mirror:
     name: main
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-python@v6
       with:
         python-version: '3.10'
 
-    - uses: Bruce17/ghaction-package-latest-version@v1.1.2
+    - name: Get latest asterisklint version
       id: get_version
-      with:
-        package: asterisklint
-        language: python
+      run: |
+        UP_VER=$(curl -L -s "https://pypi.org/pypi/asterisklint/json" | jq  -r '.releases | keys | .[]' | sort -Vr | head -n 1)
+        echo "UP_VER=$UP_VER" >> $GITHUB_ENV
+        echo "asterisklint: $UP_VER"
 
     - run: git config --global user.name 'github-actions[bot]'
     - run: git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -33,8 +34,8 @@ jobs:
       run: |
         CUR_VER=$(cat version.txt)
         echo "CUR_VER=$CUR_VER" >> $GITHUB_ENV
-        echo "$CUR_VER"
-        echo ${{ steps.get_version.outputs.latestVersion }}
+        echo "current: $CUR_VER"
+        echo "upstream: $UP_VER"
 
     - run: |
         if [ "$NEW" != "$OLD" ]
@@ -42,11 +43,11 @@ jobs:
             echo "$NEW" > version.txt
             git add version.txt
             git commit -m "Mirror: ${{ steps.get_version.outputs.latestVersion }}"
-            git tag v${{ steps.get_version.outputs.latestVersion }}
+            git tag v${{ env.UP_VER }}
             git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY
             git push origin HEAD:refs/heads/master --tags
         fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NEW: ${{ steps.get_version.outputs.latestVersion }}
+        NEW: ${{ env.UP_VER }}
         OLD: ${{ env.CUR_VER }}

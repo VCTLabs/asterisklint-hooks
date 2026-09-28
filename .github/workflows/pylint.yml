@@ -93,7 +93,7 @@ jobs:
 
     # Use the output from the `analyze` step
     - name: Create pylint badge
-      uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8  # v2.0.3
+      uses: emibcn/badge-action@f9150fde070fcca0c4e832437611b44838fcd325  # v2.0.4
       id: badge
       with:
         label: 'Pylint score'
@@ -116,7 +116,7 @@ jobs:
         git commit -m "Add/Update badge" || true
 
     - name: Push badge commit
-      uses: ad-m/github-push-action@77c5b412c50b723d2a4fbc6d71fb5723bcd439aa  # v1.0.0
+      uses: ad-m/github-push-action@4cc74773234f74829a8c21bc4d69dd4be9cfa599  # v1.1.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: badges
